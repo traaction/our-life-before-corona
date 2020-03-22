@@ -56,7 +56,6 @@ jobs:
         name: marcelmue/our-life-before-corona
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-        tags: $GITHUB_SHA
         dockerfile: Dockerfile
         registry: quay.io
 
