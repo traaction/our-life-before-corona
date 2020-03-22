@@ -71,7 +71,7 @@ func main() {
 	router.GET("/activities", a.ListAll)
 	router.POST("/activities", a.Add)
 
-	router.GET("/sentences/:sentence", s.Get)
+	router.GET("/sentences/:user", s.Get)
 	router.POST("/sentences", s.Add)
 
 	router.GET("/places/:place", p.List)

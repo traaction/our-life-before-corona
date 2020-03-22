@@ -30,12 +30,12 @@ func (p Place) Add(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, err)
 		return
 	}
-	c.JSON(http.StatusCreated, place.UUID)
+	c.JSON(http.StatusCreated, place)
 }
 
 // Place returns a list of places from a given input string.
 func (p Place) List(c *gin.Context) {
-	places := make([]models.ReturnNameId, 0)
+	places := make([]models.Place, 0)
 	query := "%" + c.Param("place") + "%"
 	if err := p.DB.Table("places").Select("UUID, Name").Limit(10).Where("Name ILIKE ?", query).Find(&places).Error; err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, err)
@@ -47,7 +47,7 @@ func (p Place) List(c *gin.Context) {
 
 // Places returns a list of all places we currently know.
 func (p Place) ListAll(c *gin.Context) {
-	places := make([]models.ReturnNameId, 0)
+	places := make([]models.Place, 0)
 	if err := p.DB.Table("places").Select("UUID, Name").Find(&places).Error; err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, err)
 		return

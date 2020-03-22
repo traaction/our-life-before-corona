@@ -14,11 +14,11 @@ const (
 )
 
 type Place struct {
-	gorm.Model
-	Name      string     `gorm:"type:varchar(100);NOT NULL" json:"name"`
-	Type      PlaceType  `gorm:"type:int" json:"-"`
-	UUID      uuid.UUID  `gorm:"column:uuid;NOT NULL;UNIQUE" json:"uuid"`
-	Sentences []Sentence `json:"-"`
+	gorm.Model `json:"-"`
+	Name       string     `gorm:"type:varchar(100);NOT NULL" json:"name"`
+	Type       PlaceType  `gorm:"type:int" json:"-"`
+	UUID       uuid.UUID  `gorm:"column:uuid;NOT NULL;UNIQUE" json:"uuid"`
+	Sentences  []Sentence `json:"-"`
 }
 
 func (u *Place) BeforeCreate(scope *gorm.Scope) error {
@@ -31,10 +31,10 @@ func (u *Place) BeforeCreate(scope *gorm.Scope) error {
 }
 
 type Activity struct {
-	gorm.Model
-	Name      string     `gorm:"type:varchar(100);NOT NULL" json:"name"`
-	UUID      uuid.UUID  `gorm:"column:uuid;NOT NULL;UNIQUE" json:"uuid"`
-	Sentences []Sentence `json:"-"`
+	gorm.Model `json:"-"`
+	Name       string     `gorm:"type:varchar(100);NOT NULL" json:"name"`
+	UUID       uuid.UUID  `gorm:"column:uuid;NOT NULL;UNIQUE" json:"uuid"`
+	Sentences  []Sentence `json:"-"`
 }
 
 func (u *Activity) BeforeCreate(scope *gorm.Scope) error {
@@ -52,21 +52,21 @@ type Location struct {
 }
 
 type UserInfo struct {
-	gorm.Model
-	UUID      uuid.UUID  `gorm:"column:uuid;NOT NULL" json:"user_uuid"`
-	Lat       float64    `json:"lat"`
-	Long      float64    `json:"long"`
-	Sentences []Sentence `json:"-"`
+	gorm.Model `json:"-"`
+	UUID       uuid.UUID  `gorm:"column:uuid;NOT NULL" json:"userUUID"`
+	Lat        float64    `json:"lat"`
+	Long       float64    `json:"long"`
+	Sentences  []Sentence `json:"-"`
 }
 
 type Sentence struct {
-	gorm.Model
-	ActivityID uint `json:"-"`
-	Activity   Activity
-	PlaceID    uint `json:"-"`
-	Place      Place
-	UserInfoID uint `json:"-"`
-	UserInfo   UserInfo
+	gorm.Model `json:"-"`
+	ActivityID uint      `json:"-"`
+	Activity   Activity  `json:"activity"`
+	PlaceID    uint      `json:"-"`
+	Place      Place     `json:"place"`
+	UserInfoID uint      `json:"-"`
+	UserInfo   UserInfo  `json:"userInfo"`
 	UUID       uuid.UUID `gorm:"column:uuid;NOT NULL;UNIQUE" json:"uuid"`
 }
 
@@ -84,9 +84,4 @@ type PayloadSentence struct {
 	ActivityUUID uuid.UUID `json:"activityUuid" binding:"required"`
 	PlaceUUID    uuid.UUID `json:"placeUuid" binding:"required"`
 	UserLocation Location  `json:"userLocation" binding:"required"`
-}
-
-type ReturnNameId struct {
-	UUID uuid.UUID `json:"uuid"`
-	Name string    `json:"name"`
 }
