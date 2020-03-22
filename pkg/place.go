@@ -39,8 +39,8 @@ func (p Place) List(c *gin.Context) {
 	var places []models.ReturnNameId
 	query := "%" + c.Param("place") + "%"
 	orderStrPos := fmt.Sprintf("strpos(LOWER(Name), LOWER('%s')) ASC ", c.Param("place"))
-	g := p.DB.Table("places").Select("UUID, Name").Where("Name ILIKE ?", query).Order(orderStrPos).Limit(10).Find(&places)
 
+	g := p.DB.Table("places").Select("UUID, Name").Where("Name ILIKE ?", query).Order(orderStrPos).Limit(10).Find(&places)
 	if g.Error != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, g.Error)
 		return

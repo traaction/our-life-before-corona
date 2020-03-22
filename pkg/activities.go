@@ -36,9 +36,10 @@ func (a Activity) Add(c *gin.Context) {
 
 // Activity returns a list of activities from a given input string.
 func (a Activity) List(c *gin.Context) {
-	activities := make([]models.ReturnNameId, 0)
+	var activities []models.ReturnNameId
 	query := "%" + c.Param("activity") + "%"
 	orderStrPos := fmt.Sprintf("strpos(LOWER(Name), LOWER('%s')) ASC ", c.Param("activity"))
+
 	g := a.DB.Table("activities").Select("UUID, Name").Where("Name ILIKE ?", query).Order(orderStrPos).Limit(10).Find(&activities)
 	if g.Error != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, g.Error)
