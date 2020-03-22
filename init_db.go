@@ -99,7 +99,7 @@ func (d dbinit) dbinit(c *gin.Context) {
 	d.DB.CreateTable(&models.Sentence{})
 	d.readActivities()
 	d.readCountries()
-	//d.readCities()
+	d.readCities()
 
 	c.JSON(http.StatusOK, nil)
 }
