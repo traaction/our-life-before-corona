@@ -9,7 +9,7 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 
-	"gitlab/wirvsvirus/our-life-before-corona/pkg"
+	"github.com/traaction/our-life-before-corona/pkg"
 )
 
 func main() {
@@ -32,13 +32,6 @@ func main() {
 		panic("failed to connect database")
 	}
 	defer db.Close()
-	// Migrate the schema
-	//db.AutoMigrate(&models.Place{})
-	//db.AutoMigrate(&models.Activity{})
-	//db.AutoMigrate(&models.Sentence{})
-
-	//db.Model(&models.Sentence{}).AddForeignKey("place_id", "places(id)", "RESTRICT", "RESTRICT")
-	//db.Model(&models.Sentence{}).AddForeignKey("activity_id", "activities(id)", "RESTRICT", "RESTRICT")
 
 	a := pkg.Activity{
 		DB: db,

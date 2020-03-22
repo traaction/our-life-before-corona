@@ -4,15 +4,15 @@ import (
 	"bufio"
 	"encoding/csv"
 	"fmt"
-	"gitlab/wirvsvirus/our-life-before-corona/models"
 	"io"
 	"log"
 	"net/http"
 	"os"
 	"strings"
 
-	"github.com/gin-gonic/gin"
+	"github.com/traaction/our-life-before-corona/models"
 
+	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
