@@ -45,7 +45,7 @@ jobs:
         name: our-life-before-corona
 
     - name: Add permissions
-      run: chmod +rwx our-life-before-corona
+      run: chmod +0755 our-life-before-corona
 
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@master
@@ -71,7 +71,7 @@ jobs:
         name: our-life-before-corona
 
     - name: Add permissions
-      run: chmod +rwx our-life-before-corona
+      run: chmod +0755 our-life-before-corona
 
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@master
