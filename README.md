@@ -1,7 +1,7 @@
 # Our Life Before Corona
 
 [![Docker Repository on Quay](https://quay.io/repository/marcelmue/our-life-before-corona/status "Docker Repository on Quay")](https://quay.io/repository/marcelmue/our-life-before-corona)
-
+[![Actions Status](https://github.com/traaction/our-life-before-corona/workflows/Go/badge.svg)](https://github.com/traaction/our-life-before-corona/actions)
 
 ## Setup with Frontend
 - Download [KIND](https://github.com/kubernetes-sigs/kind#installation-and-usage) (easiest install with `curl`)
