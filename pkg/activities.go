@@ -1,9 +1,9 @@
 package pkg
 
 import (
-	"fmt"
 	"net/http"
 
+	"github.com/sirupsen/logrus"
 	"github.com/traaction/our-life-before-corona/models"
 
 	"github.com/gin-gonic/gin"
@@ -11,7 +11,8 @@ import (
 )
 
 type Activity struct {
-	DB *gorm.DB
+	DB     *gorm.DB
+	Logger *logrus.Logger
 }
 
 // Adds an activity
@@ -22,7 +23,7 @@ func (a Activity) Add(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusBadRequest, err)
 		return
 	}
-	fmt.Println(activity)
+	a.Logger.Info(activity)
 
 	if err := a.DB.Create(&activity).Error; err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, err)

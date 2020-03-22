@@ -1,9 +1,9 @@
 package pkg
 
 import (
-	"fmt"
 	"net/http"
 
+	"github.com/sirupsen/logrus"
 	"github.com/traaction/our-life-before-corona/models"
 
 	"github.com/gin-gonic/gin"
@@ -11,7 +11,8 @@ import (
 )
 
 type Sentence struct {
-	DB *gorm.DB
+	DB     *gorm.DB
+	Logger *logrus.Logger
 }
 
 // Adds a Sentence
@@ -22,9 +23,9 @@ func (s Sentence) Add(c *gin.Context) {
 		return
 	}
 
-	fmt.Println(payload)
+	s.Logger.Info(payload)
 
-	fmt.Println("Get Activity")
+	s.Logger.Info("Get Activity")
 	var activity models.Activity
 	if err := s.DB.Where("uuid = ?", payload.ActivityUUID).First(&activity).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
@@ -34,9 +35,9 @@ func (s Sentence) Add(c *gin.Context) {
 		}
 		return
 	}
-	fmt.Println(activity.Name)
+	s.Logger.Info(activity.Name)
 
-	fmt.Println("Get Place")
+	s.Logger.Info("Get Place")
 	var place models.Place
 	if err := s.DB.Where("uuid = ?", payload.PlaceUUID).First(&place).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
@@ -46,17 +47,17 @@ func (s Sentence) Add(c *gin.Context) {
 		}
 		return
 	}
-	fmt.Println(place.Name)
+	s.Logger.Info(place.Name)
 
 	location := models.Location{Lat: payload.UserLocation.Lat, Long: payload.UserLocation.Long}
 
 	userInfo := models.UserInfo{UUID: payload.UserUUID, Name: payload.UserName, Location: location}
 
-	fmt.Println("Create Sentence")
+	s.Logger.Info("Create Sentence")
 	sentence := models.Sentence{Activity: activity, Place: place, UserInfo: userInfo}
-	fmt.Println(sentence)
+	s.Logger.Info(sentence)
 	if err := s.DB.Create(&sentence).Error; err != nil {
-		fmt.Println(err)
+		s.Logger.Info(err)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, err)
 		return
 	}
