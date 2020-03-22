@@ -93,19 +93,32 @@ type Stats struct {
 }
 
 type StatsActivity struct {
-	TotalDistinctCount int `json:"totalDistinctCount"`
-	MatchCount         int `json:"matchCount"`
+	TotalDistinctCount int                      `json:"totalDistinctCount"`
+	TopPlaces          []StatsActivityTopPlaces `json:"topPlaces"`
+	MatchCount         int                      `json:"matchCount"`
+}
+
+type StatsActivityTopPlaces struct {
+	Name  string `json:"name"`
+	Count uint   `json:"count"`
 }
 
 type StatsPlace struct {
-	TotalDistinctCount int `json:"totalDistinctCount"`
-	MatchCount         int `json:"matchCount"`
+	TotalDistinctCount int      `json:"totalDistinctCount"`
+	TopActivities      []string `json:"topActivities"`
+	MatchCount         int      `json:"matchCount"`
 }
 
 type StatsSentence struct {
 	TotalDistinctCount int `json:"totalDistinctCount"`
+	MatchCount         int `json:"matchCount"`
 }
 
 type PayloadStats struct {
 	SentenceUUID uuid.UUID `json:"sentenceUuid" binding:"required"`
+}
+
+type StatsResult struct {
+	PlaceID uint
+	Result  uint
 }
