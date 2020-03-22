@@ -43,12 +43,10 @@ jobs:
     - uses: actions/download-artifact@v1
       with:
         name: our-life-before-corona
+        path: .
 
     - name: Add permissions
-      run: pwd
-    - run: ls -la
-    - run: stat  our-life-before-corona
-    - run: chmod +0755 our-life-before-corona
+      run: chmod +0755 our-life-before-corona
 
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@master
@@ -76,11 +74,7 @@ jobs:
         path: .
 
     - name: Add permissions
-      run: ls -la /home/runner/work/our-life-before-corona/our-life-before-corona/our-life-before-corona
-    - run: pwd
-    - run: ls -la
-    - run: stat  our-life-before-corona
-    - run: chmod +0755 our-life-before-corona
+      run: chmod +0755 our-life-before-corona
 
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@master
