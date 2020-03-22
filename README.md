@@ -8,7 +8,7 @@
 - Create cluster with `kind create cluster`
 - Apply all manifests `kubectl apply -f kubernetes`
 - Start port forwarding api to localhost `kubectl port-forward service/our-life-before-corona 8080:8080`
-- Hit `http://localhost:8080/dev/init` **once** from your browser to load in seed data
+- Hit `http://localhost:8080/dev/init` **once** from your browser to create the tables and load in seed data
 - Point your frontend to `localhost:8080` for the api!
 - To remove everything from the cluster simply run `kubectl delete -f kubernetes`
 
