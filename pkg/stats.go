@@ -70,6 +70,28 @@ func (s Stats) calculateActivityStats(activitiy models.Activity, stats *models.S
 	}
 	stats.ActivityStats.TotalDistinctCount = totalCount
 
+	var res []models.StatsResult
+	g = s.DB.Table("sentences").Select("place_id, COUNT(place_id) as result").Where("activity_ID = ?", activitiy.ID).Group("place_id").Order("result DESC").Limit(10).Find(&res)
+	if g.Error != nil {
+		return g.Error
+	}
+
+	stats.ActivityStats.TopPlaces = []models.StatsActivityTopPlaces{}
+	for _, r := range res {
+		placeName := []string{
+			"",
+		}
+		g = s.DB.Table("places").Where("ID = ?", r.PlaceID).Pluck("name", &placeName)
+		if g.Error != nil {
+			return g.Error
+		}
+		tp := models.StatsActivityTopPlaces{
+			Name:  placeName[0],
+			Count: r.Result,
+		}
+		stats.ActivityStats.TopPlaces = append(stats.ActivityStats.TopPlaces, tp)
+	}
+
 	return nil
 }
 
