@@ -26,7 +26,7 @@ func (s Sentence) Add(c *gin.Context) {
 
 	fmt.Println("Get Activity")
 	var activity models.Activity
-	if err := s.DB.First(&activity, payload.ActivityID).Error; err != nil {
+	if err := s.DB.Where("uuid = ?", payload.ActivityUUID).First(&activity).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			c.AbortWithStatusJSON(http.StatusNotFound, err)
 		} else {
@@ -38,7 +38,7 @@ func (s Sentence) Add(c *gin.Context) {
 
 	fmt.Println("Get Place")
 	var place models.Place
-	if err := s.DB.First(&place, payload.PlaceID).Error; err != nil {
+	if err := s.DB.Where("uuid = ?", payload.PlaceUUID).First(&place).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			c.AbortWithStatusJSON(http.StatusNotFound, err)
 		} else {
@@ -50,7 +50,7 @@ func (s Sentence) Add(c *gin.Context) {
 
 	location := models.Location{Lat: payload.UserLocation.Lat, Long: payload.UserLocation.Long}
 
-	userInfo := models.UserInfo{ID: payload.UserID, Name: payload.UserName, Location: location}
+	userInfo := models.UserInfo{UUID: payload.UserUUID, Name: payload.UserName, Location: location}
 
 	fmt.Println("Create Sentence")
 	sentence := models.Sentence{Activity: activity, Place: place, UserInfo: userInfo}
@@ -60,5 +60,5 @@ func (s Sentence) Add(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, err)
 		return
 	}
-	c.JSON(http.StatusCreated, models.ReturnId{ID: sentence.ID})
+	c.JSON(http.StatusCreated, models.ReturnId{ID: sentence.UUID})
 }

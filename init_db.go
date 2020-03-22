@@ -85,9 +85,18 @@ func (d dbinit) readActivities() {
 }
 
 func (d dbinit) dbinit(c *gin.Context) {
-	d.DB.DropTable(&models.Activity{})
-	d.DB.DropTable(&models.Place{})
-	d.DB.DropTable(&models.Sentence{})
+	if d.DB.HasTable(&models.Activity{}) {
+		d.DB.DropTable(&models.Activity{})
+	}
+	if d.DB.HasTable(&models.Place{}) {
+		d.DB.DropTable(&models.Place{})
+	}
+	if d.DB.HasTable(&models.Sentence{}) {
+		d.DB.DropTable(&models.Sentence{})
+	}
+	d.DB.CreateTable(&models.Activity{})
+	d.DB.CreateTable(&models.Place{})
+	d.DB.CreateTable(&models.Sentence{})
 	d.readActivities()
 	d.readCountries()
 	d.readCities()

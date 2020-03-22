@@ -1,6 +1,7 @@
 package models
 
 import (
+	"github.com/google/uuid"
 	"github.com/jinzhu/gorm"
 )
 
@@ -16,11 +17,31 @@ type Place struct {
 	gorm.Model
 	Name string    `gorm:"type:varchar(100);NOT NULL" json:"name" binding:"required"`
 	Type PlaceType `json:"-"`
+	UUID uuid.UUID `gorm:"column:uuid;NOT NULL;UNIQUE"`
+}
+
+func (u *Place) BeforeCreate(scope *gorm.Scope) error {
+	uuid := uuid.New()
+	err := scope.SetColumn("uuid", uuid)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 type Activity struct {
 	gorm.Model
-	Name string `gorm:"type:varchar(100);NOT NULL" json:"name" binding:"required"`
+	Name string    `gorm:"type:varchar(100);NOT NULL" json:"name" binding:"required"`
+	UUID uuid.UUID `gorm:"column:uuid;NOT NULL;UNIQUE"`
+}
+
+func (u *Activity) BeforeCreate(scope *gorm.Scope) error {
+	uuid := uuid.New()
+	err := scope.SetColumn("uuid", uuid)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 type Location struct {
@@ -29,7 +50,7 @@ type Location struct {
 }
 
 type UserInfo struct {
-	ID       string
+	UUID     uuid.UUID
 	Name     string
 	Location Location
 }
@@ -42,21 +63,31 @@ type Sentence struct {
 	PID      uint     `gorm:"column:place_id"`
 	UserInfo UserInfo
 	Location Location
+	UUID     uuid.UUID `gorm:"column:uuid;NOT NULL;UNIQUE"`
+}
+
+func (u *Sentence) BeforeCreate(scope *gorm.Scope) error {
+	uuid := uuid.New()
+	err := scope.SetColumn("uuid", uuid)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 type PayloadSentence struct {
-	UserID       string   `json:"userUuid" binding:"required"`
-	UserName     string   `json:"userName" binding:"required"`
-	ActivityID   uint     `json:"activityUuid" binding:"required"`
-	PlaceID      uint     `json:"placeUuid" binding:"required"`
-	UserLocation Location `json:"userLocation" binding:"required"`
+	UserUUID     uuid.UUID `json:"userUuid" binding:"required"`
+	UserName     string    `json:"userName" binding:"required"`
+	ActivityUUID uuid.UUID `json:"activityUuid" binding:"required"`
+	PlaceUUID    uuid.UUID `json:"placeUuid" binding:"required"`
+	UserLocation Location  `json:"userLocation" binding:"required"`
 }
 
 type ReturnId struct {
-	ID uint `json:"uuid"`
+	ID uuid.UUID `json:"uuid"`
 }
 
 type ReturnNameId struct {
-	ID   uint   `json:"uuid"`
-	Name string `json:"name"`
+	ID   uuid.UUID `json:"uuid"`
+	Name string    `json:"name"`
 }
