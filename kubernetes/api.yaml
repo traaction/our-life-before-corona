@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name:  our-life-before-corona
-        image: "quay.io/marcelmue/our-life-before-corona:latest"
+        image: "quay.io/marcelmue/our-life-before-corona:65fe7aa8e15459206756b0aac73a7ff4d6c1898b"
         envFrom:
           - configMapRef:
               name: postgres-config
