@@ -33,6 +33,7 @@ jobs:
     if: github.event_name != 'pull_request'
 
     steps:
+    - uses: actions/checkout@master
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
@@ -50,6 +51,7 @@ jobs:
     if: github.event_name == 'pull_request'
 
     steps:
+    - uses: actions/checkout@master
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
