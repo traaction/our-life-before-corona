@@ -43,6 +43,10 @@ jobs:
     - uses: actions/download-artifact@v1
       with:
         name: our-life-before-corona
+        path: .
+
+    - name: Add permissions
+      run: chmod +0755 our-life-before-corona
 
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@master
@@ -66,6 +70,10 @@ jobs:
     - uses: actions/download-artifact@v1
       with:
         name: our-life-before-corona
+        path: .
+
+    - name: Add permissions
+      run: chmod +0755 our-life-before-corona
 
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@master

@@ -1,9 +1,9 @@
 package pkg
 
 import (
-	"fmt"
 	"net/http"
 
+	"github.com/sirupsen/logrus"
 	"github.com/traaction/our-life-before-corona/models"
 
 	"github.com/gin-gonic/gin"
@@ -11,7 +11,8 @@ import (
 )
 
 type Place struct {
-	DB *gorm.DB
+	DB     *gorm.DB
+	Logger *logrus.Logger
 }
 
 // AddPlace adds a place to our datastore.
@@ -23,7 +24,7 @@ func (p Place) Add(c *gin.Context) {
 		return
 	}
 	place.Type = models.Other
-	fmt.Println(place)
+	p.Logger.Info(place)
 
 	if err := p.DB.Create(&place).Error; err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, err)
