@@ -15,6 +15,22 @@ type Sentence struct {
 	Logger *logrus.Logger
 }
 
+func (s Sentence) Get(c *gin.Context) {
+	var sentence models.Sentence
+	s.Logger.Info(c.Param("sentence"))
+	if err := s.DB.Preload("UserInfo").Preload("Activity").Preload("Place").Where("uuid = ?", c.Param("sentence")).First(&sentence).Error; err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			c.AbortWithStatusJSON(http.StatusNotFound, err)
+		} else {
+			c.AbortWithStatusJSON(http.StatusInternalServerError, err)
+		}
+		return
+	}
+	s.Logger.Info(sentence)
+
+	c.JSON(http.StatusOK, sentence)
+}
+
 // Adds a Sentence
 func (s Sentence) Add(c *gin.Context) {
 	var payload models.PayloadSentence
@@ -49,17 +65,30 @@ func (s Sentence) Add(c *gin.Context) {
 	}
 	s.Logger.Info(place.Name)
 
-	location := models.Location{Lat: payload.UserLocation.Lat, Long: payload.UserLocation.Long}
+	s.Logger.Info("Get user info")
+	var userInfo models.UserInfo
+	if err := s.DB.Where("uuid = ?", payload.UserUUID).First(&userInfo).Error; err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			s.Logger.Info("Create user info")
+			userInfo = models.UserInfo{UUID: payload.UserUUID, Lat: payload.UserLocation.Lat, Long: payload.UserLocation.Long}
+			if err := s.DB.Create(&userInfo).Error; err != nil {
+				s.Logger.Info(err)
+				c.AbortWithStatusJSON(http.StatusInternalServerError, err)
+				return
+			}
+		} else {
+			c.AbortWithStatusJSON(http.StatusInternalServerError, err)
+			return
+		}
 
-	userInfo := models.UserInfo{UUID: payload.UserUUID, Name: payload.UserName, Location: location}
-
+	}
 	s.Logger.Info("Create Sentence")
-	sentence := models.Sentence{Activity: activity, Place: place, UserInfo: userInfo}
-	s.Logger.Info(sentence)
+	sentence := models.Sentence{ActivityID: activity.ID, PlaceID: place.ID, UserInfoID: userInfo.ID}
+
 	if err := s.DB.Create(&sentence).Error; err != nil {
 		s.Logger.Info(err)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, err)
 		return
 	}
-	c.JSON(http.StatusCreated, models.ReturnId{ID: sentence.UUID})
+	c.JSON(http.StatusCreated, sentence.UUID)
 }
