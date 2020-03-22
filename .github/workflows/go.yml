@@ -46,9 +46,9 @@ jobs:
 
     - name: Add permissions
       run: mv /home/runner/work/our-life-before-corona/our-life-before-corona/our-life-before-corona ./binfile
-      run: rm - rf /home/runner/work/our-life-before-corona/our-life-before-corona/
-      run: mv binfile ./our-life-before-corona
-      run: chmod +0755 our-life-before-corona
+           rm - rf /home/runner/work/our-life-before-corona/our-life-before-corona/
+           mv binfile ./our-life-before-corona
+           chmod +0755 our-life-before-corona
 
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@master
@@ -75,9 +75,9 @@ jobs:
 
     - name: Add permissions
       run: mv /home/runner/work/our-life-before-corona/our-life-before-corona/our-life-before-corona ./binfile
-      run: rm - rf /home/runner/work/our-life-before-corona/our-life-before-corona/
-      run: mv binfile ./our-life-before-corona
-      run: chmod +0755 our-life-before-corona
+           rm - rf /home/runner/work/our-life-before-corona/our-life-before-corona/
+           mv binfile ./our-life-before-corona
+           chmod +0755 our-life-before-corona
 
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@master
