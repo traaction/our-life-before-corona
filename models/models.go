@@ -15,9 +15,10 @@ const (
 
 type Place struct {
 	gorm.Model
-	Name string    `gorm:"type:varchar(100);NOT NULL" json:"name" binding:"required"`
-	Type PlaceType `json:"-"`
-	UUID uuid.UUID `gorm:"column:uuid;NOT NULL;UNIQUE"`
+	Name      string     `gorm:"type:varchar(100);NOT NULL" json:"name"`
+	Type      PlaceType  `gorm:"type:int" json:"-"`
+	UUID      uuid.UUID  `gorm:"column:uuid;NOT NULL;UNIQUE" json:"uuid"`
+	Sentences []Sentence `json:"-"`
 }
 
 func (u *Place) BeforeCreate(scope *gorm.Scope) error {
@@ -31,8 +32,9 @@ func (u *Place) BeforeCreate(scope *gorm.Scope) error {
 
 type Activity struct {
 	gorm.Model
-	Name string    `gorm:"type:varchar(100);NOT NULL" json:"name" binding:"required"`
-	UUID uuid.UUID `gorm:"column:uuid;NOT NULL;UNIQUE"`
+	Name      string     `gorm:"type:varchar(100);NOT NULL" json:"name"`
+	UUID      uuid.UUID  `gorm:"column:uuid;NOT NULL;UNIQUE" json:"uuid"`
+	Sentences []Sentence `json:"-"`
 }
 
 func (u *Activity) BeforeCreate(scope *gorm.Scope) error {
@@ -50,20 +52,22 @@ type Location struct {
 }
 
 type UserInfo struct {
-	UUID     uuid.UUID
-	Name     string
-	Location Location
+	gorm.Model
+	UUID      uuid.UUID `gorm:"column:uuid;NOT NULL" json:"user_uuid"`
+	Lat       float64   `json:"lat"`
+	Long      float64   `json:"long"`
+	Sentences []Sentence
 }
 
 type Sentence struct {
 	gorm.Model
-	Activity Activity `gorm:"foreignkey:activity_id;association_foreignkey:id"`
-	AID      uint     `gorm:"column:activity_id"`
-	Place    Place    `gorm:"foreignkey:place_id;association_foreignkey:id"`
-	PID      uint     `gorm:"column:place_id"`
-	UserInfo UserInfo
-	Location Location
-	UUID     uuid.UUID `gorm:"column:uuid;NOT NULL;UNIQUE"`
+	ActivityID uint `json:"-"`
+	Activity   Activity
+	PlaceID    uint `json:"-"`
+	Place      Place
+	UserInfoID uint `json:"-"`
+	UserInfo   UserInfo
+	UUID       uuid.UUID `gorm:"column:uuid;NOT NULL;UNIQUE" json:"uuid"`
 }
 
 func (u *Sentence) BeforeCreate(scope *gorm.Scope) error {
@@ -77,17 +81,12 @@ func (u *Sentence) BeforeCreate(scope *gorm.Scope) error {
 
 type PayloadSentence struct {
 	UserUUID     uuid.UUID `json:"userUuid" binding:"required"`
-	UserName     string    `json:"userName" binding:"required"`
 	ActivityUUID uuid.UUID `json:"activityUuid" binding:"required"`
 	PlaceUUID    uuid.UUID `json:"placeUuid" binding:"required"`
 	UserLocation Location  `json:"userLocation" binding:"required"`
 }
 
-type ReturnId struct {
-	ID uuid.UUID `json:"uuid"`
-}
-
 type ReturnNameId struct {
-	ID   uuid.UUID `json:"uuid"`
+	UUID uuid.UUID `json:"uuid"`
 	Name string    `json:"name"`
 }

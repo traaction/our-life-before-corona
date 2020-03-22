@@ -78,8 +78,10 @@ func (d dbinit) readActivities() {
 		}
 		if len(line) > 0 && line[0] != '#' {
 			lineStripped := strings.TrimSpace(line)
-			fmt.Println(fmt.Sprintf("Adding activity: %s", lineStripped))
-			d.DB.Create(&models.Activity{Name: lineStripped})
+			if lineStripped != "" {
+				fmt.Println(fmt.Sprintf("Adding activity: %s", lineStripped))
+				d.DB.Create(&models.Activity{Name: lineStripped})
+			}
 		}
 	}
 }
@@ -94,12 +96,15 @@ func (d dbinit) dbinit(c *gin.Context) {
 	if d.DB.HasTable(&models.Sentence{}) {
 		d.DB.DropTable(&models.Sentence{})
 	}
-	d.DB.CreateTable(&models.Activity{})
-	d.DB.CreateTable(&models.Place{})
-	d.DB.CreateTable(&models.Sentence{})
+	if d.DB.HasTable(&models.UserInfo{}) {
+		d.DB.DropTable(&models.UserInfo{})
+	}
+
+	d.DB.AutoMigrate(&models.Activity{}, &models.Place{}, &models.Sentence{}, &models.UserInfo{})
+
 	d.readActivities()
 	d.readCountries()
-	d.readCities()
+	//d.readCities()
 
 	c.JSON(http.StatusOK, nil)
 }

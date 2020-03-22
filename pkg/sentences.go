@@ -14,6 +14,22 @@ type Sentence struct {
 	DB *gorm.DB
 }
 
+func (s Sentence) Get(c *gin.Context) {
+	var sentence models.Sentence
+	fmt.Println(c.Param("sentence"))
+	if err := s.DB.Preload("UserInfo").Preload("Activity").Preload("Place").Where("uuid = ?", c.Param("sentence")).First(&sentence).Error; err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			c.AbortWithStatusJSON(http.StatusNotFound, err)
+		} else {
+			c.AbortWithStatusJSON(http.StatusInternalServerError, err)
+		}
+		return
+	}
+	fmt.Println(sentence)
+
+	c.JSON(http.StatusOK, sentence)
+}
+
 // Adds a Sentence
 func (s Sentence) Add(c *gin.Context) {
 	var payload models.PayloadSentence
@@ -48,17 +64,30 @@ func (s Sentence) Add(c *gin.Context) {
 	}
 	fmt.Println(place.Name)
 
-	location := models.Location{Lat: payload.UserLocation.Lat, Long: payload.UserLocation.Long}
+	fmt.Println("Get user info")
+	var userInfo models.UserInfo
+	if err := s.DB.Where("uuid = ?", payload.UserUUID).First(&userInfo).Error; err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			fmt.Println("Create user info")
+			userInfo = models.UserInfo{UUID: payload.UserUUID, Lat: payload.UserLocation.Lat, Long: payload.UserLocation.Long}
+			if err := s.DB.Create(&userInfo).Error; err != nil {
+				fmt.Println(err)
+				c.AbortWithStatusJSON(http.StatusInternalServerError, err)
+				return
+			}
+		} else {
+			c.AbortWithStatusJSON(http.StatusInternalServerError, err)
+			return
+		}
 
-	userInfo := models.UserInfo{UUID: payload.UserUUID, Name: payload.UserName, Location: location}
+	}
 
 	fmt.Println("Create Sentence")
-	sentence := models.Sentence{Activity: activity, Place: place, UserInfo: userInfo}
-	fmt.Println(sentence)
+	sentence := models.Sentence{ActivityID: activity.ID, PlaceID: place.ID, UserInfoID: userInfo.ID}
 	if err := s.DB.Create(&sentence).Error; err != nil {
 		fmt.Println(err)
 		c.AbortWithStatusJSON(http.StatusInternalServerError, err)
 		return
 	}
-	c.JSON(http.StatusCreated, models.ReturnId{ID: sentence.UUID})
+	c.JSON(http.StatusCreated, sentence.UUID)
 }

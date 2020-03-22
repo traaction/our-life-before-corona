@@ -29,7 +29,7 @@ func (p Place) Add(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, err)
 		return
 	}
-	c.JSON(http.StatusCreated, models.ReturnId{ID: place.UUID})
+	c.JSON(http.StatusCreated, place.UUID)
 }
 
 // Place returns a list of places from a given input string.

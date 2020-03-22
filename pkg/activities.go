@@ -29,7 +29,7 @@ func (a Activity) Add(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, models.ReturnId{ID: activity.UUID})
+	c.JSON(http.StatusCreated, activity.UUID)
 }
 
 // Activity returns a list of activities from a given input string.
