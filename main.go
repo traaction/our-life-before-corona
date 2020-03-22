@@ -3,11 +3,13 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"github.com/sirupsen/logrus"
 
 	"github.com/traaction/our-life-before-corona/pkg"
 )
@@ -22,27 +24,35 @@ func main() {
 	sslmode := flag.String("sslmode", "disable", "sslmode of the DB.")
 	flag.Parse()
 
+	var logger = logrus.New()
+
+	logger.Out = os.Stdout
+	logger.SetLevel(logrus.InfoLevel)
+
 	dbcon := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s",
 		*host, *port, *user, *name, *password, *sslmode)
-	fmt.Println(dbcon)
+	logger.Info(dbcon)
 
 	db, err := gorm.Open("postgres", dbcon)
 	if err != nil {
-		fmt.Println(err)
+		logger.Error(err)
 		panic("failed to connect database")
 	}
 	defer db.Close()
 
 	a := pkg.Activity{
-		DB: db,
+		DB:     db,
+		Logger: logger,
 	}
 
 	s := pkg.Sentence{
-		DB: db,
+		DB:     db,
+		Logger: logger,
 	}
 
 	p := pkg.Place{
-		DB: db,
+		DB:     db,
+		Logger: logger,
 	}
 
 	d := dbinit{
