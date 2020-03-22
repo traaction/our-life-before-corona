@@ -26,13 +26,6 @@ jobs:
       run: GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -v .
 
 
-    - name: Upload go binary
-      uses: actions/upload-artifact@v1
-      with:
-          name: our-life-before-corona
-          path: our-life-before-corona
-
-
   pushMaster:
     name: Docker Master
     runs-on: ubuntu-latest
@@ -40,18 +33,15 @@ jobs:
     if: github.event_name != 'pull_request'
 
     steps:
-    - name: download go binary
-      uses: actions/download-artifact@v1
-      with:
-        name: our-life-before-corona
-
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
-        name: quay.io/marcelmue/our-life-before-corona
+        name: marcelmue/our-life-before-corona
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         tags: "latest"
+        dockerfile: Dockerfile
+        registry: quay.io
 
   pushPR:
     name: Docker PR
@@ -60,16 +50,13 @@ jobs:
     if: github.event_name == 'pull_request'
 
     steps:
-    - name: download go binary
-      uses: actions/download-artifact@v1
-      with:
-        name: our-life-before-corona
-
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
-        name: quay.io/marcelmue/our-life-before-corona
+        name: marcelmue/our-life-before-corona
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         tags: "$GITHUB_SHA"
+        dockerfile: Dockerfile
+        registry: quay.io
 
