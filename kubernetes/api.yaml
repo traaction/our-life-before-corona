@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: our-life-before-corona
+  labels:
+    app:  our-life-before-corona
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app:  our-life-before-corona
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app:  our-life-before-corona
+    spec:
+      containers:
+      - name:  our-life-before-corona
+        image: "quay.io/marcelmue/our-life-before-corona:latest"
+        envFrom:
+          - configMapRef:
+              name: postgres-config
+        args:
+        - "-host=postgres"
+        - "-port=5432"
+        - "-user=$(POSTGRES_USER)"
+        - "-dbname=$(POSTGRES_DB)"
+        - "-password=$(POSTGRES_PASSWORD)"
+        - "-sslmode=disable"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: our-life-before-corona
+  labels:
+    app: our-life-before-corona
+spec:
+  ports:
+  - port: 8080
+  selector:
+    app: our-life-before-corona
