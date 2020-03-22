@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/sirupsen/logrus"
@@ -35,10 +36,13 @@ func (p Place) Add(c *gin.Context) {
 
 // Place returns a list of places from a given input string.
 func (p Place) List(c *gin.Context) {
-	places := make([]models.ReturnNameId, 0)
+	var places []models.ReturnNameId
 	query := "%" + c.Param("place") + "%"
-	if err := p.DB.Table("places").Select("UUID, Name").Limit(10).Where("Name ILIKE ?", query).Find(&places).Error; err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, err)
+	orderStrPos := fmt.Sprintf("strpos(LOWER(Name), LOWER('%s')) ASC ", c.Param("place"))
+	g := p.DB.Table("places").Select("UUID, Name").Where("Name ILIKE ?", query).Order(orderStrPos).Limit(10).Find(&places)
+
+	if g.Error != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, g.Error)
 		return
 	}
 
