@@ -73,6 +73,7 @@ jobs:
     - uses: actions/download-artifact@v1
       with:
         name: our-life-before-corona
+        path: .
 
     - name: Add permissions
       run: ls -la /home/runner/work/our-life-before-corona/our-life-before-corona/our-life-before-corona
