@@ -89,16 +89,21 @@ type PayloadSentence struct {
 type Stats struct {
 	ActivityStats StatsActivity ` json:"activity"`
 	PlaceStats    StatsPlace    ` json:"place"`
+	SentenceStats StatsSentence ` json:"sentence"`
 }
 
 type StatsActivity struct {
-	TotalCount int `json:"totalCount"`
-	MatchCount int `json:"matchCount"`
+	TotalDistinctCount int `json:"totalDistinctCount"`
+	MatchCount         int `json:"matchCount"`
 }
 
 type StatsPlace struct {
-	TotalCount int `json:"totalCount"`
-	MatchCount int `json:"matchCount"`
+	TotalDistinctCount int `json:"totalDistinctCount"`
+	MatchCount         int `json:"matchCount"`
+}
+
+type StatsSentence struct {
+	TotalDistinctCount int `json:"totalDistinctCount"`
 }
 
 type PayloadStats struct {

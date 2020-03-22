@@ -45,6 +45,12 @@ func (s Stats) Get(c *gin.Context) {
 		return
 	}
 
+	err = s.calculateSentenceStats(sentence, stats)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, err)
+		return
+	}
+
 	c.JSON(http.StatusOK, stats)
 }
 
@@ -58,30 +64,42 @@ func (s Stats) calculateActivityStats(activitiy models.Activity, stats *models.S
 	}
 	stats.ActivityStats.MatchCount = matchCount
 
-	g = s.DB.Table("sentences").Count(&totalCount)
+	g = s.DB.Table("activities").Count(&totalCount)
 	if g.Error != nil {
 		return g.Error
 	}
-	stats.ActivityStats.TotalCount = totalCount
+	stats.ActivityStats.TotalDistinctCount = totalCount
 
 	return nil
 }
 
-func (s Stats) calculatePlaceStats(activitiy models.Place, stats *models.Stats) error {
+func (s Stats) calculatePlaceStats(place models.Place, stats *models.Stats) error {
 	totalCount := 0
 	matchCount := 0
 
-	g := s.DB.Table("sentences").Where("place_ID = ?", activitiy.ID).Count(&matchCount)
+	g := s.DB.Table("sentences").Where("place_ID = ?", place.ID).Count(&matchCount)
 	if g.Error != nil {
 		return g.Error
 	}
 	stats.PlaceStats.MatchCount = matchCount
 
-	g = s.DB.Table("sentences").Count(&totalCount)
+	g = s.DB.Table("places").Count(&totalCount)
 	if g.Error != nil {
 		return g.Error
 	}
-	stats.PlaceStats.TotalCount = totalCount
+	stats.PlaceStats.TotalDistinctCount = totalCount
+
+	return nil
+}
+
+func (s Stats) calculateSentenceStats(sentence models.Sentence, stats *models.Stats) error {
+	totalCount := 0
+
+	g := s.DB.Table("sentences").Count(&totalCount)
+	if g.Error != nil {
+		return g.Error
+	}
+	stats.SentenceStats.TotalDistinctCount = totalCount
 
 	return nil
 }
