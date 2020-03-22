@@ -55,6 +55,11 @@ func main() {
 		Logger: logger,
 	}
 
+	stats := pkg.Stats{
+		DB:     db,
+		Logger: logger,
+	}
+
 	d := dbinit{
 		DB:     db,
 		Logger: logger,
@@ -77,6 +82,8 @@ func main() {
 	router.GET("/places/:place", p.List)
 	router.GET("/places", p.ListAll)
 	router.POST("/places", p.Add)
+
+	router.GET("/stats", stats.Get)
 
 	router.Run(":8080")
 }

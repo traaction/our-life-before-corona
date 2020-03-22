@@ -64,7 +64,7 @@ func (d dbinit) readCities() {
 		}
 		if line[0][0] != '#' {
 			fmt.Println(fmt.Sprintf("Adding city: %s", line[0]))
-			d.Logger.Info(&models.Place{Name: line[0], Type: models.City})
+			d.DB.Create(&models.Place{Name: line[0], Type: models.City})
 		}
 	}
 }
