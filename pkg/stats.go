@@ -94,12 +94,19 @@ func (s Stats) calculatePlaceStats(place models.Place, stats *models.Stats) erro
 
 func (s Stats) calculateSentenceStats(sentence models.Sentence, stats *models.Stats) error {
 	totalCount := 0
+	matchCount := 0
 
 	g := s.DB.Table("sentences").Count(&totalCount)
 	if g.Error != nil {
 		return g.Error
 	}
 	stats.SentenceStats.TotalDistinctCount = totalCount
+
+	g = s.DB.Table("sentences").Where("place_ID = ? AND activity_ID = ?", sentence.Place.ID, sentence.Activity.ID).Count(&matchCount)
+	if g.Error != nil {
+		return g.Error
+	}
+	stats.SentenceStats.MatchCount = matchCount
 
 	return nil
 }

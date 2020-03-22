@@ -104,6 +104,7 @@ type StatsPlace struct {
 
 type StatsSentence struct {
 	TotalDistinctCount int `json:"totalDistinctCount"`
+	MatchCount         int `json:"matchCount"`
 }
 
 type PayloadStats struct {
