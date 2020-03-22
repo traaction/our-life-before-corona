@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/traaction/your-life-before-corona/models"
+	"github.com/traaction/our-life-before-corona/models"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"

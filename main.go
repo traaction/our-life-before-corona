@@ -9,8 +9,8 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 
-	"github.com/traaction/your-life-before-corona/models"
-	"github.com/traaction/your-life-before-corona/pkg"
+	"github.com/traaction/our-life-before-corona/models"
+	"github.com/traaction/our-life-before-corona/pkg"
 )
 
 func main() {
