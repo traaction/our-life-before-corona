@@ -45,11 +45,9 @@ jobs:
         name: our-life-before-corona
 
     - name: Add permissions
-      run: mv /home/runner/work/our-life-before-corona/our-life-before-corona/our-life-before-corona ./binfile
     - run: pwd
     - run: ls -la
-    - run: rm -rf /home/runner/work/our-life-before-corona/our-life-before-corona/
-    - run: mv ./binfile ./our-life-before-corona
+    - run: stat  our-life-before-corona
     - run: chmod +0755 our-life-before-corona
 
     - name: Publish to Registry
@@ -61,6 +59,7 @@ jobs:
         tags: "latest"
         dockerfile: Dockerfile
         registry: quay.io
+        workdir: our-life-before-corona
 
   pushPR:
     name: Docker PR
@@ -76,11 +75,11 @@ jobs:
         name: our-life-before-corona
 
     - name: Add permissions
-      run: mv /home/runner/work/our-life-before-corona/our-life-before-corona/our-life-before-corona ./binfile
+      run: ls -la /home/runner/work/our-life-before-corona/our-life-before-corona/our-life-before-corona
     - run: pwd
     - run: ls -la
-    - run: rm -rf /home/runner/work/our-life-before-corona/our-life-before-corona/
-    - run: mv ./binfile ./our-life-before-corona
+    - run: stat  our-life-before-corona
+    - run: chmod +0755 our-life-before-corona
     - run: chmod +0755 our-life-before-corona
 
     - name: Publish to Registry
@@ -91,4 +90,5 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
         dockerfile: Dockerfile
         registry: quay.io
+        workdir: our-life-before-corona
 
