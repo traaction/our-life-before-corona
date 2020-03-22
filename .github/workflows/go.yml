@@ -45,7 +45,7 @@ jobs:
         name: our-life-before-corona
 
     - name: Add permissions
-    - run: pwd
+      run: pwd
     - run: ls -la
     - run: stat  our-life-before-corona
     - run: chmod +0755 our-life-before-corona
