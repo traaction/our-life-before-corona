@@ -33,7 +33,7 @@ jobs:
           path: our-life-before-corona
 
 
-  push:
+  pushMaster:
     name: Docker Master
     runs-on: ubuntu-latest
     on:
@@ -56,7 +56,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
         tags: "latest"
 
-  push:
+  pushPR:
     name: Docker PR
     runs-on: ubuntu-latest
     on:
