@@ -9,7 +9,6 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 
-	"gitlab/wirvsvirus/our-life-before-corona/models"
 	"gitlab/wirvsvirus/our-life-before-corona/pkg"
 )
 
@@ -23,7 +22,8 @@ func main() {
 	sslmode := flag.String("sslmode", "disable", "sslmode of the DB.")
 	flag.Parse()
 
-	dbcon := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s", *host, *port, *user, *name, *password, *sslmode)
+	dbcon := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s",
+		*host, *port, *user, *name, *password, *sslmode)
 	fmt.Println(dbcon)
 
 	db, err := gorm.Open("postgres", dbcon)
@@ -33,12 +33,12 @@ func main() {
 	}
 	defer db.Close()
 	// Migrate the schema
-	db.AutoMigrate(&models.Place{})
-	db.AutoMigrate(&models.Activity{})
-	db.AutoMigrate(&models.Sentence{})
+	//db.AutoMigrate(&models.Place{})
+	//db.AutoMigrate(&models.Activity{})
+	//db.AutoMigrate(&models.Sentence{})
 
-	db.Model(&models.Sentence{}).AddForeignKey("place_id", "places(id)", "RESTRICT", "RESTRICT")
-	db.Model(&models.Sentence{}).AddForeignKey("activity_id", "activities(id)", "RESTRICT", "RESTRICT")
+	//db.Model(&models.Sentence{}).AddForeignKey("place_id", "places(id)", "RESTRICT", "RESTRICT")
+	//db.Model(&models.Sentence{}).AddForeignKey("activity_id", "activities(id)", "RESTRICT", "RESTRICT")
 
 	a := pkg.Activity{
 		DB: db,

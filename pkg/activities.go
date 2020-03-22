@@ -28,7 +28,7 @@ func (a Activity) Add(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, models.ReturnId{ID: activity.ID})
+	c.JSON(http.StatusCreated, models.ReturnId{ID: activity.UUID})
 }
 
 // Activity returns a list of activities from a given input string.
@@ -36,7 +36,7 @@ func (a Activity) List(c *gin.Context) {
 	activities := make([]models.ReturnNameId, 0)
 	query := "%" + c.Param("activity") + "%"
 
-	g := a.DB.Table("activities").Select("ID, Name").Limit(10).Where("Name ILIKE ?", query).Find(&activities)
+	g := a.DB.Table("activities").Select("UUID, Name").Limit(10).Where("Name ILIKE ?", query).Find(&activities)
 	if g.Error != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, g.Error)
 		return
@@ -49,7 +49,7 @@ func (a Activity) List(c *gin.Context) {
 func (a Activity) ListAll(c *gin.Context) {
 	activities := make([]models.ReturnNameId, 0)
 
-	g := a.DB.Table("activities").Select("ID, Name").Find(&activities)
+	g := a.DB.Table("activities").Select("UUID, Name").Find(&activities)
 	if g.Error != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, g.Error)
 		return
