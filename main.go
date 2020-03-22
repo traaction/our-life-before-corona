@@ -56,8 +56,7 @@ func main() {
 	}
 
 	d := dbinit{
-		DB:     db,
-		Logger: logger,
+		DB: db,
 	}
 
 	c := cors.Config{
