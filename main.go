@@ -59,11 +59,8 @@ func main() {
 		DB: db,
 	}
 
-	c := cors.Config{
-		AllowOrigins: []string{
-			"*",
-		},
-	}
+	c := cors.DefaultConfig()
+	c.AllowAllOrigins = true
 	handlefun := cors.New(c)
 	router.Use(handlefun)
 
