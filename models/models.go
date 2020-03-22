@@ -85,3 +85,22 @@ type PayloadSentence struct {
 	PlaceUUID    uuid.UUID `json:"placeUuid" binding:"required"`
 	UserLocation Location  `json:"userLocation" binding:"required"`
 }
+
+type Stats struct {
+	ActivityStats StatsActivity ` json:"activity"`
+	PlaceStats    StatsPlace    ` json:"place"`
+}
+
+type StatsActivity struct {
+	TotalCount int `json:"totalCount"`
+	MatchCount int `json:"matchCount"`
+}
+
+type StatsPlace struct {
+	TotalCount int `json:"totalCount"`
+	MatchCount int `json:"matchCount"`
+}
+
+type PayloadStats struct {
+	SentenceUUID uuid.UUID `json:"sentenceUuid" binding:"required"`
+}
