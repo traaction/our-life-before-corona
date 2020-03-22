@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"encoding/csv"
 	"fmt"
-	"gitlab/wirvsvirus/our-life-before-corona/models"
+	"github.com/traaction/your-life-before-corona/models"
 	"io"
 	"log"
 	"net/http"

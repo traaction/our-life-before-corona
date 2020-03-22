@@ -2,8 +2,9 @@ package pkg
 
 import (
 	"fmt"
-	"gitlab/wirvsvirus/our-life-before-corona/models"
 	"net/http"
+
+	"github.com/traaction/your-life-before-corona/models"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
