@@ -47,6 +47,7 @@ jobs:
     - name: Add permissions
       run: mv /home/runner/work/our-life-before-corona/our-life-before-corona/our-life-before-corona ./binfile
     - run: pwd
+    - run: ls -la
     - run: rm -rf /home/runner/work/our-life-before-corona/our-life-before-corona/
     - run: mv ./binfile ./our-life-before-corona
     - run: chmod +0755 our-life-before-corona
@@ -77,6 +78,7 @@ jobs:
     - name: Add permissions
       run: mv /home/runner/work/our-life-before-corona/our-life-before-corona/our-life-before-corona ./binfile
     - run: pwd
+    - run: ls -la
     - run: rm -rf /home/runner/work/our-life-before-corona/our-life-before-corona/
     - run: mv ./binfile ./our-life-before-corona
     - run: chmod +0755 our-life-before-corona
