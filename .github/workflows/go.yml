@@ -22,12 +22,61 @@ jobs:
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
 
-    - name: Build 
-      run: GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -v . -o our-life-before-corona
-    
+    - name: Build
+      run: GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -v .
 
-    - name: Upload math result for job 1
+
+    - name: Upload go binary
       uses: actions/upload-artifact@v1
       with:
           name: our-life-before-corona
           path: our-life-before-corona
+
+
+  push:
+    name: Docker Master
+    runs-on: ubuntu-latest
+    on:
+      push:
+        branches:
+          - master
+    steps:
+    - uses: actions/checkout@master
+
+    - name: download go binary
+      uses: actions/download-artifact@v1
+      with:
+        name: our-life-before-corona
+
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: quay.io/marcelmue/our-life-before-corona
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        tags: "latest"
+
+  push:
+    name: Docker PR
+    runs-on: ubuntu-latest
+    on:
+      pull_request:
+        branches:
+          - master
+
+    steps:
+    - uses: actions/checkout@master
+
+    - name: download go binary
+      uses: actions/download-artifact@v1
+      with:
+        name: our-life-before-corona
+
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: quay.io/marcelmue/our-life-before-corona
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        tags: "$GITHUB_SHA"
+
