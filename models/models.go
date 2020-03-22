@@ -53,10 +53,10 @@ type Location struct {
 
 type UserInfo struct {
 	gorm.Model
-	UUID      uuid.UUID `gorm:"column:uuid;NOT NULL" json:"user_uuid"`
-	Lat       float64   `json:"lat"`
-	Long      float64   `json:"long"`
-	Sentences []Sentence
+	UUID      uuid.UUID  `gorm:"column:uuid;NOT NULL" json:"user_uuid"`
+	Lat       float64    `json:"lat"`
+	Long      float64    `json:"long"`
+	Sentences []Sentence `json:"-"`
 }
 
 type Sentence struct {

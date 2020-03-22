@@ -10,6 +10,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/sirupsen/logrus"
 	"github.com/traaction/our-life-before-corona/models"
 
 	"github.com/gin-gonic/gin"
@@ -18,7 +19,8 @@ import (
 )
 
 type dbinit struct {
-	DB *gorm.DB
+	DB     *gorm.DB
+	Logger *logrus.Logger
 }
 
 func getCSVReader(file string) *csv.Reader {
@@ -44,7 +46,7 @@ func (d dbinit) readCountries() {
 			log.Fatal(error)
 		}
 		if line[0][0] != '#' {
-			fmt.Println(fmt.Sprintf("Adding country: %s", line[1]))
+			d.Logger.Info(fmt.Sprintf("Adding country: %s", line[1]))
 			d.DB.Create(&models.Place{Name: line[1], Type: models.Country})
 		}
 
@@ -62,7 +64,7 @@ func (d dbinit) readCities() {
 		}
 		if line[0][0] != '#' {
 			fmt.Println(fmt.Sprintf("Adding city: %s", line[0]))
-			d.DB.Create(&models.Place{Name: line[0], Type: models.City})
+			d.Logger.Info(&models.Place{Name: line[0], Type: models.City})
 		}
 	}
 }
@@ -79,7 +81,7 @@ func (d dbinit) readActivities() {
 		if len(line) > 0 && line[0] != '#' {
 			lineStripped := strings.TrimSpace(line)
 			if lineStripped != "" {
-				fmt.Println(fmt.Sprintf("Adding activity: %s", lineStripped))
+				d.Logger.Info(fmt.Sprintf("Adding activity: %s", lineStripped))
 				d.DB.Create(&models.Activity{Name: lineStripped})
 			}
 		}
@@ -104,7 +106,7 @@ func (d dbinit) dbinit(c *gin.Context) {
 
 	d.readActivities()
 	d.readCountries()
-	//d.readCities()
+	d.readCities()
 
 	c.JSON(http.StatusOK, nil)
 }
