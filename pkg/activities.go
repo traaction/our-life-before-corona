@@ -31,12 +31,12 @@ func (a Activity) Add(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, activity.UUID)
+	c.JSON(http.StatusCreated, activity)
 }
 
 // Activity returns a list of activities from a given input string.
 func (a Activity) List(c *gin.Context) {
-	var activities []models.ReturnNameId
+	var activities []models.Activity
 	query := "%" + c.Param("activity") + "%"
 	orderStrPos := fmt.Sprintf("strpos(LOWER(Name), LOWER('%s')) ASC ", c.Param("activity"))
 
@@ -51,7 +51,7 @@ func (a Activity) List(c *gin.Context) {
 
 // Activities returns a list of all activities we currently know.
 func (a Activity) ListAll(c *gin.Context) {
-	activities := make([]models.ReturnNameId, 0)
+	activities := make([]models.Activity, 0)
 
 	g := a.DB.Table("activities").Select("UUID, Name").Find(&activities)
 	if g.Error != nil {

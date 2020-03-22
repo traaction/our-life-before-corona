@@ -15,10 +15,11 @@ type Sentence struct {
 	Logger *logrus.Logger
 }
 
+//Get all sentences fo user_id
 func (s Sentence) Get(c *gin.Context) {
-	var sentence models.Sentence
-	s.Logger.Info(c.Param("sentence"))
-	if err := s.DB.Preload("UserInfo").Preload("Activity").Preload("Place").Where("uuid = ?", c.Param("sentence")).First(&sentence).Error; err != nil {
+	var userInfo models.UserInfo
+	s.Logger.Info(c.Param("user"))
+	if err := s.DB.Where("uuid = ?", c.Param("user")).First(&userInfo).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			c.AbortWithStatusJSON(http.StatusNotFound, err)
 		} else {
@@ -26,9 +27,18 @@ func (s Sentence) Get(c *gin.Context) {
 		}
 		return
 	}
-	s.Logger.Info(sentence)
 
-	c.JSON(http.StatusOK, sentence)
+	sentences := make([]models.Sentence, 0)
+	if err := s.DB.Model(&userInfo).Preload("UserInfo").Preload("Activity").Preload("Place").Related(&sentences).Error; err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			c.AbortWithStatusJSON(http.StatusNotFound, err)
+		} else {
+			c.AbortWithStatusJSON(http.StatusInternalServerError, err)
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, sentences)
 }
 
 // Adds a Sentence
